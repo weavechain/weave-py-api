@@ -8,7 +8,7 @@
 pip install weave-py-api
 ```
 
-#### Simple read sample
+#### Data read sample
 
 ```python
 from weaveapi import weaveapi
@@ -28,7 +28,7 @@ table = "directory"
 cfg = weave_client_config(pub, pvk, node, organization)
 nodeApi, session = connect_weave_api(cfg)
 
-reply = nodeApi.read(session, scope, table, None, READ_DEFAULT_MUX_NO_CHAIN).get()
+reply = nodeApi.read(session, scope, table, None, READ_DEFAULT_NO_CHAIN).get()
 print(reply["data"])
 ```
 
