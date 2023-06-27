@@ -476,7 +476,7 @@ class ClientHttp:
         return self.authPost(session, "task_lineage", data)
 
     def verifyTaskLineage(self, session, lineageData):
-        data = {"task_lineage": task_lineage}
+        data = {"task_lineage": lineageData}
 
         return self.authPost(session, "verify_task_lineage", data)
 
