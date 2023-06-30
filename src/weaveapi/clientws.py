@@ -868,7 +868,7 @@ class ClientWs:
 
     def getTables(self, session, scope):
         data = {
-            "type": "get_node_config",
+            "type": "get_tables",
             "scope": scope
         }
         return self.authPost(session, data)
