@@ -73,7 +73,7 @@ def integritySignature(clientPublicKey, session, scope, records, tableDefinition
             first = True
             for r in records.records:
                 record = standardizeRecord(r, layout)
-                data = record.toJson() if isinstance(record, Record) else json.dumps(record, separators=(',', ':'))
+                data = record.toJson() if isinstance(record, Record) else json.dumps(record, separators=(',', ':'), ensure_ascii=False)
                 hash = hashFn(salt, data)
 
                 if first:
