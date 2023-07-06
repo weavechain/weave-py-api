@@ -614,13 +614,14 @@ class ClientWs:
             data["filter"] = filter.toJson()
         return self.authPost(session, data)
 
-    def merkleProof(self, session, scope, table, hash):
+    def merkleProof(self, session, scope, table, hash, digest = None):
         data = {
             "type": "merkle_proof",
             "organization": session.organization,
             "account": session.account,
             "scope": scope,
             "table": table,
+            "digest": digest,
             "hash": hash
         }
 
@@ -1193,3 +1194,19 @@ class ClientWs:
         }
 
         return self.authPost(session, data)
+
+    def emailAuth(self, org, clientPubKey, targetWebUrl, email):
+        toSign = clientPubKey + "\n" + email
+        signature = self.apiContext.createEd25519Signature(toSign)
+
+        data = {
+            "organization": org,
+            "clientPubKey": clientPubKey,
+            "targetEmail": email,
+            "targetWebUrl": targetWebUrl,
+            "signature": signature,
+            "x-sig-key": self.apiContext.sigKey
+        }
+
+        encodedData = base64.b64encode(json.dumps(data)).decode("ascii")
+        return self.request(encodedData, False)

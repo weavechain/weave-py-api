@@ -157,8 +157,8 @@ class NodeApi:
     def merkleTree(self, session, scope, table, filter, salt, digest, options):
         return self.client.merkleTree(session, scope, table, filter, salt, digest, options)
 
-    def merkleProof(self, session, scope, table, hash):
-        return self.client.merkleProof(session, scope, table, hash)
+    def merkleProof(self, session, scope, table, hash, digest = None):
+        return self.client.merkleProof(session, scope, table, hash, digest)
 
     def rootHash(self, session, scope, table):
         return self.client.rootHash(session, scope, table)
@@ -182,7 +182,7 @@ class NodeApi:
     def hashRecord(self, row, salt, digest = None):
         #layout = self.client.getLayout(session, scope, table)
         #record = standardizeRecord(row, layout)
-        data = row if isinstance(row, str) else json.dumps(row, separators=(',', ':'))
+        data = row if isinstance(row, str) else json.dumps(row, separators=(',', ':'), ensure_ascii=False)
         enc = self.client.keyExchange.signRequest(bytes(salt, encoding='utf-8'), data)
         return base58.b58encode(base64.b64decode(enc)).decode('utf-8')
 
@@ -341,3 +341,6 @@ class NodeApi:
 
     def withdrawAuthorize(self, session, token, address):
         return self.client.withdrawAuthorize(session, token, address)
+
+    def emailAuth(self, org, clientPubKey, targetWebUrl, email):
+        return self.client.emailAuth(org, clientPubKey, targetWebUrl, email)

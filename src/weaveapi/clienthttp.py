@@ -535,8 +535,13 @@ class ClientHttp:
             data["filter"] = filter.toJson()
         return self.authPost(session, "merkle_tree", data)
 
-    def merkleProof(self, session, scope, table, hash):
-        data = {"scope": scope, "table": table, "hash": hash}
+    def merkleProof(self, session, scope, table, hash, digest = None):
+        data = {
+            "scope": scope,
+            "table": table,
+            "digest": digest,
+            "hash": hash
+        }
 
         return self.authPost(session, "merkle_proof", data)
 
@@ -1038,3 +1043,18 @@ class ClientHttp:
             "signature": self.apiContext.createEd25519Signature(toSign)
         }
         return self.authPost(session, "withdraw_auth", data)
+
+    def emailAuth(self, org, clientPubKey, targetWebUrl, email):
+        toSign = clientPubKey + "\n" + email
+        signature = self.apiContext.createEd25519Signature(toSign)
+        data = {
+            "organization": org,
+            "clientPubKey": clientPubKey,
+            "targetEmail": email,
+            "targetWebUrl": targetWebUrl,
+            "signature": signature,
+            "x-sig-key": self.apiContext.sigKey
+        }
+
+        encodedData = base64.b64encode(json.dumps(data)).decode("ascii")
+        return self.post("email_auth", encodedData, None)
