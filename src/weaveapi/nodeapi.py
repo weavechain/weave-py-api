@@ -127,8 +127,8 @@ class NodeApi:
     def flearn(self, session, image, flOptions):
         return self.client.flearn(session, image, flOptions)
     
-    def splitLearn(self, session, image, slOptions):
-        return self.client.splitLearn(session, image, slOptions)
+    def splitLearn(self, session, serverImage, clientImage, slOptions):
+        return self.client.splitLearn(session, serverImage, clientImage, slOptions)
 
     def forwardApi(self, session, feedId, params):
         return self.client.forwardApi(session, feedId, params)

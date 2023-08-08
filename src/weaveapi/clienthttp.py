@@ -55,7 +55,6 @@ class ClientHttp:
         self.secretKey = self.keyExchange.sharedSecret(
             self.apiContext.clientPrivateKey, self.apiContext.serverPublicKey
         )
-        # print([b if b < 128 else b-256 for b in self.secretKey])
 
     def close(self):
         pass
@@ -627,9 +626,10 @@ class ClientHttp:
 
         return self.authPost(session, "f_learn", data)
 
-    def splitLearn(self, session, image, slOptions):
+    def splitLearn(self, session, serverImage, clientImage, slOptions):
         data = {
-            "image": image,
+            "serverImage": serverImage,
+            "clientImage": clientImage,
             "options": None if slOptions is None else slOptions.toJson(),
         }
 

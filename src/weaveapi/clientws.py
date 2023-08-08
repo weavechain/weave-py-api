@@ -725,12 +725,13 @@ class ClientWs:
 
         return self.authPost(session, data)
     
-    def splitLearn(self, session, image, slOptions):
+    def splitLearn(self, session, serverImage, clientImage, slOptions):
         data = {
             "type": "split_learn",
             "organization": session.organization,
             "account": session.account,
-            "image": image,
+            "serverImage": serverImage,
+            "clientImage": clientImage,
             "options": None if slOptions is None else slOptions.toJson()
         }
 
