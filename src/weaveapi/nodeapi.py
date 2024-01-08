@@ -78,6 +78,12 @@ class NodeApi:
     def read(self, session, scope, table, filter, readOptions):
         return self.client.read(session, scope, table, filter, readOptions)
 
+    def readStream(self, session, scope, table, filter, readOptions, outputFolder, outputFile):
+        return self.client.readStream(session, scope, table, filter, readOptions, outputFolder, outputFile)
+
+    def readReceipts(self, session):
+        return self.client.readReceipts(session)
+
     def count(self, session, scope, table, filter, readOptions):
         return self.client.count(session, scope, table, filter, readOptions)
 
@@ -166,8 +172,8 @@ class NodeApi:
     def zkMerkleTree(self, session, scope, table, filter, salt, digest, rounds, seed, options):
         return self.client.zkMerkleTree(session, scope, table, filter, salt, digest, rounds, seed, options)
 
-    def mimcHash(self, session, data, rounds, seed):
-        return self.client.mimcHash(session, data, rounds, seed)
+    def mimcHash(self, session, data, rounds, seed, compress = False):
+        return self.client.mimcHash(session, data, rounds, seed, compress)
 
     def proofsLastHash(self, session, scope, table):
         return self.client.proofsLastHash(session, scope, table)
@@ -183,7 +189,7 @@ class NodeApi:
         #layout = self.client.getLayout(session, scope, table)
         #record = standardizeRecord(row, layout)
         data = row if isinstance(row, str) else json.dumps(row, separators=(',', ':'), ensure_ascii=False)
-        enc = self.client.keyExchange.signRequest(bytes(salt, encoding='utf-8'), data)
+        enc = self.client.keyExchange.signRequest(bytes(salt, encoding='utf-8') if salt is not None else None, data, digest)
         return base58.b58encode(base64.b64decode(enc)).decode('utf-8')
 
     def sign(self, data):
@@ -268,6 +274,14 @@ class NodeApi:
         try:
             pubKey = self.client.apiContext.deserializePublic(self.client.serverSigKey)
             pubKey.verify(base58.b58decode(signature), data.encode('utf-8'))
+            return True
+        except:
+            return False
+
+    def verifyHeaderSignature(self, signature, data):
+        try:
+            pubKey = self.client.apiContext.deserializePublic(self.client.serverSigKey)
+            pubKey.verify(base58.b58decode(signature), base58.b58decode(data))
             return True
         except:
             return False

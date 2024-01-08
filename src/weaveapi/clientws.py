@@ -656,14 +656,15 @@ class ClientWs:
 
         return self.authPost(session, data)
 
-    def mimcHash(self, session, data, rounds, seed):
+    def mimcHash(self, session, data, rounds, seed, compress = False):
         pdata = {
             "type": "mimc_hash",
             "organization": session.organization,
             "account": session.account,
             "data": data,
             "rounds": rounds,
-            "seed": seed
+            "seed": seed,
+            "compress": compress
         }
 
         return self.authPost(session, pdata)
@@ -712,6 +713,12 @@ class ClientWs:
         return self.authPost(session, data)
 
     def getImage(self, session, image, localOutputFolder, computeOptions):
+        return "Not implemented"
+
+    def readStream(self, session, scope, table, filter, readOptions, outputFolder, outputFile):
+        return "Not implemented"
+
+    def readReceipts(self, session):
         return "Not implemented"
 
     def flearn(self, session, image, flOptions):

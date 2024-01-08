@@ -55,10 +55,7 @@ class KeyExchange:
             text = text[l:]
             yield text_slice
         else:
-            if len(text) == l:
-                yield text
-            else:
-                yield self.pad_pkcs5(text, self.size)
+            yield self.pad_pkcs5(text, self.size)
 
     def signHTTP(self, secret, url, apiKey, nonce, data):
         body = str(data)
@@ -78,6 +75,13 @@ class KeyExchange:
         #toSign = json.dumps(data, cls=SortedEncoder, separators=(',', ':'))
         return self.signRequest(secret, toSign)
 
-    def signRequest(self, secret, toSign):
-        sig = hmac.new(secret, msg=bytes(toSign, encoding='utf-8'), digestmod=hashlib.sha256).digest()
+    def signRequest(self, secret, toSign, digest = None):
+        if digest is not None and digest == "SaltedSHA512" or secret is None:
+            h = hashlib.sha256()
+            if secret is not None:
+                h.update(secret)
+            h.update(bytes(toSign, encoding='utf-8'))
+            sig = h.digest()
+        else:
+            sig = hmac.new(secret, msg=bytes(toSign, encoding='utf-8'), digestmod=hashlib.sha256).digest()
         return base64.b64encode(sig).decode('utf-8')

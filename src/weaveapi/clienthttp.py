@@ -187,6 +187,7 @@ class ClientHttp:
 
     def authDownload(self, session, call, data):
         headers = self.buildHeaders(session, call, data)
+        headers["Accept-Encoding"] = "gzip;q=0,deflate;q=0";
 
         return self.download(call, data, headers)
 
@@ -287,6 +288,22 @@ class ClientHttp:
         if filter is not None:
             data["filter"] = filter.toJson()
         return self.authPost(session, "read", data)
+
+    def readStream(self, session, scope, table, filter, readOptions, localOutputFolder, fileName):
+        data = {"scope": scope, "table": table, "options": readOptions.toJson()}
+
+        if filter is not None:
+            data["filter"] = filter.toJson()
+        if readOptions.stream is not None and readOptions.stream:
+            data["localOutputFolder"] = localOutputFolder
+            data["imageName"] = fileName
+            return self.authDownload(session, "read", data)
+        else:
+            return self.authPost(session, "read", data)
+
+    def readReceipts(self, session):
+        data = {}
+        return self.authPost(session, "read_receipts", data)
 
     def count(self, session, scope, table, filter, readOptions):
         data = {"scope": scope, "table": table, "options": readOptions.toJson()}
@@ -566,11 +583,12 @@ class ClientHttp:
 
         return self.authPost(session, "root_hash", data)
 
-    def mimcHash(self, session, data, rounds, seed):
+    def mimcHash(self, session, data, rounds, seed, compress = False):
         pdata = {
             "data": data,
             "rounds": rounds,
-            "seed": seed
+            "seed": seed,
+            "compress": compress
         }
 
         return self.authPost(session, "mimc_hash", pdata)

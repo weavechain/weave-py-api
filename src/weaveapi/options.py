@@ -81,12 +81,13 @@ class HistoryOptions:
 HISTORY_DEFAULT = HistoryOptions(["read", "delete", "write"])
 
 class ReadOptions:
-    def __init__(self, verifyHash, readTimeoutSec, peersConsensus = 0, enableMux = False, getBatchHashes = False):
+    def __init__(self, verifyHash, readTimeoutSec, peersConsensus = 0, enableMux = False, getBatchHashes = False, stream = False):
         self.verifyHash = verifyHash
         self.readTimeoutSec = readTimeoutSec
         self.peersConsensus = peersConsensus
         self.enableMux = enableMux
         self.getBatchHashes = getBatchHashes;
+        self.stream = stream
 
     def toJson(self):
         return json.dumps({
@@ -94,7 +95,8 @@ class ReadOptions:
             "readTimeoutSec": self.readTimeoutSec,
             "peersConsensus": self.peersConsensus,
             "enableMux": self.enableMux,
-            "getBatchHashes": self.getBatchHashes
+            "getBatchHashes": self.getBatchHashes,
+            "stream": self.stream
         })
 
     @staticmethod
@@ -104,17 +106,19 @@ class ReadOptions:
             json["readTimeoutSec"],
             json["peersConsensus"],
             json["enableMux"],
-            json["getBatchHashes"]
+            json["getBatchHashes"],
+            json["stream"]
         )
 
 DEFAULT_READ_TIMEOUT_SEC = 300
 
 ALL_ACTIVE = 2147483647
 
-READ_DEFAULT = ReadOptions(True, DEFAULT_READ_TIMEOUT_SEC, 0, False, False)
-READ_DEFAULT_NO_CHAIN = ReadOptions(False, DEFAULT_READ_TIMEOUT_SEC, 0, False, False)
-READ_DEFAULT_MUX = ReadOptions(True, DEFAULT_READ_TIMEOUT_SEC, ALL_ACTIVE, True, False)
-READ_DEFAULT_MUX_NO_CHAIN = ReadOptions(False, DEFAULT_READ_TIMEOUT_SEC, ALL_ACTIVE, True, False)
+READ_DEFAULT = ReadOptions(True, DEFAULT_READ_TIMEOUT_SEC, 0, False, False, False)
+READ_DEFAULT_NO_CHAIN = ReadOptions(False, DEFAULT_READ_TIMEOUT_SEC, 0, False, False, False)
+READ_DEFAULT_MUX = ReadOptions(True, DEFAULT_READ_TIMEOUT_SEC, ALL_ACTIVE, True, False, False)
+READ_DEFAULT_MUX_NO_CHAIN = ReadOptions(False, DEFAULT_READ_TIMEOUT_SEC, ALL_ACTIVE, True, False, False)
+READ_DEFAULT_STREAM = ReadOptions(False, DEFAULT_READ_TIMEOUT_SEC, 0, False, False, True)
 
 
 ALL_ACTIVE_NODES = [ "*" ]
