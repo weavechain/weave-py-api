@@ -163,6 +163,9 @@ class NodeApi:
     def merkleTree(self, session, scope, table, filter, salt, digest, options):
         return self.client.merkleTree(session, scope, table, filter, salt, digest, options)
 
+    def existingMerkleTree(self, session, scope, table):
+        return self.client.existingMerkleTree(session, scope, table)
+
     def merkleProof(self, session, scope, table, hash, digest = None):
         return self.client.merkleProof(session, scope, table, hash, digest)
 
@@ -181,9 +184,9 @@ class NodeApi:
     def updateProofs(self, session, scope, table):
         return self.client.updateProofs(session, scope, table)
 
-    def verifyMerkleHash(self, session, tree, hash, digest = None):
+    def verifyMerkleHash(self, session, tree, hash, digest = None, value = None):
         #using remote function for now, could be local
-        return self.client.verifyMerkleHash(session, tree, hash, digest)
+        return self.client.verifyMerkleHash(session, tree, hash, digest, value)
 
     def hashRecord(self, row, salt, digest = None):
         #layout = self.client.getLayout(session, scope, table)

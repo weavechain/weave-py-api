@@ -614,6 +614,17 @@ class ClientWs:
             data["filter"] = filter.toJson()
         return self.authPost(session, data)
 
+    def existingMerkleTree(self, session, scope, table):
+        data = {
+            "type": "existing_merkle_tree",
+            "organization": session.organization,
+            "account": session.account,
+            "scope": scope,
+            "table": table
+        }
+
+        return self.authPost(session, data)
+
     def merkleProof(self, session, scope, table, hash, digest = None):
         data = {
             "type": "merkle_proof",
@@ -691,12 +702,13 @@ class ClientWs:
 
         return self.authPost(session, pdata)
 
-    def verifyMerkleHash(self, session, tree, hash, digest):
+    def verifyMerkleHash(self, session, tree, hash, digest, value = None):
         data = {
             "type": "verify_merkle_hash",
             "tree": tree,
             "hash": hash,
-            "digest": digest
+            "digest": digest,
+            "value": value
         }
 
         return self.authPost(session, data)
