@@ -361,3 +361,6 @@ class NodeApi:
 
     def emailAuth(self, org, clientPubKey, targetWebUrl, email):
         return self.client.emailAuth(org, clientPubKey, targetWebUrl, email)
+
+    def pluginCall(self, session, plugin, req, args, timeout):
+        return self.client.pluginCall(session, plugin, req, args, timeout)

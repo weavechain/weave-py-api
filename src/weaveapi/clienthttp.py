@@ -1085,3 +1085,13 @@ class ClientHttp:
 
         encodedData = base64.b64encode(json.dumps(data)).decode("ascii")
         return self.post("email_auth", encodedData, None)
+
+    def pluginCall(self, session, plugin, req, args, timeout):
+        data = {
+            "plugin": plugin,
+            "request": req,
+            "args": None if args is None else args if isinstance(args, str) else json.dumps(args)
+            "timeout": timeout
+        }
+
+        return self.authPost(session, "plugin_call", data)
