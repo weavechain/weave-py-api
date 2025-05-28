@@ -1090,7 +1090,7 @@ class ClientHttp:
         data = {
             "plugin": plugin,
             "request": req,
-            "args": None if args is None else args if isinstance(args, str) else json.dumps(args)
+            "args": None if args is None else args if isinstance(args, str) else json.dumps(args),
             "timeout": timeout
         }
 
